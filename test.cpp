@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "dfs.cpp"
+#include "dfs.h"
 #include <string>
 #include <stdlib.h>
 #include <time.h>
