@@ -95,7 +95,7 @@ public:
 
     // run dfs
     // call startNode function for each node before iterating through its neighborhood
-    // call endNode fucntion for each
+    // call endNode fucntion for each node when we're done with it
     // call discoverNode function for each node when it was discovered as adjacent to visited
     void dfs(NodeVisitor const & startNode, NodeVisitor const & endNode, NodeVisitor const & discoverNode) {
         std::vector<bool> used;
