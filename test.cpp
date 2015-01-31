@@ -80,6 +80,13 @@ namespace {
     }
 
     void doNothing(Graph<int>::NodeHandle const & ignored) {}
+
+    int correctOrder[] = {3, 2, 1, 0};
+    int order = 0;
+    void checkOrder(Graph<int>::NodeHandle const & justEnded) {
+        EXPECT_EQ(correctOrder[order], justEnded);
+        order++;
+    }
 }
 
 TEST(correctness, fullGraph) {
@@ -120,4 +127,16 @@ TEST(correctness, connectedComponentsN) {
     }
     disChain.dfs(startNode, doNothing, discoverNode);
     EXPECT_EQ(cnt, cnt1 - 1);
+}
+
+TEST(correctness, endTest) {
+    Graph<int> g;
+    Graph<int>::NodeHandle n1 = g.addNode();
+    Graph<int>::NodeHandle n2 = g.addNode();
+    Graph<int>::NodeHandle n3 = g.addNode();
+    Graph<int>::NodeHandle n4 = g.addNode();
+    g.addEdge(n1, n2);
+    g.addEdge(n2, n3);
+    g.addEdge(n2, n4);
+    g.dfs(doNothing, checkOrder, doNothing);
 }

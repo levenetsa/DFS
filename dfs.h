@@ -104,25 +104,55 @@ public:
             used[i] = false;
         }
 
+        std::stack<NodeHandle> end;
         NodeHandle curr;
         for (NodeHandle i = 0; i < edges.size(); i++) {
             if (!used[i]) {
-                std::stack<NodeHandle> st;
-                st.push(i);
+                std::stack< std::pair< NodeHandle, std::stack<NodeHandle> > > st;
+                end.push(i);
+                st.push(make_pair(i, end));
                 while (!st.empty()) {
-                    curr = st.top();
+                    curr = st.top().first;
+                    end = st.top().second;
                     st.pop();
                     startNode(curr);
 
+/*                    std::stack<NodeHandle> copy = end;
+                    std::cout << curr << "\n";
+                    while (!copy.empty()) {
+                        std::cout << copy.top() << " ";
+                        copy.pop();
+                    }
+                    std::cout << "\n";*/
+
+                    bool discovered = false;
                     for (auto it = edges[curr].begin(); it != edges[curr].end(); it++) {
                         discoverNode(*it);
                         if (!used[*it]) {
                             used[*it] = true;
-                            st.push(*it);
+                            // this call will be executed last
+                            // have to end this node after executing
+                            if (!discovered) {
+                                end.push(*it);
+                                st.push(make_pair(*it, end));
+                                discovered = true;
+                            }
+                            else {
+                                end = std::stack<NodeHandle>();
+                                end.push(*it);
+                                st.push(make_pair(*it, end));
+                            }
                         }
                     }
+//                    std::cout << discovered << "\n\n";
 
-                    endNode(curr);
+
+                    if (!discovered) {
+                        while(!end.empty()) {
+                            endNode(end.top());
+                            end.pop();
+                        }
+                    }
                 }
             }
         }
